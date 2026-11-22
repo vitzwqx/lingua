@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f7fb">
+<title>Lingua — языковая практика</title>
+<style>
+:root {
+  --bg:#f5f7fb;--panel:#fff;--ink:#182230;--muted:#697586;
+  --line:#e5eaf1;--brand:#5267e8;--brand2:#eef0ff;
+  --good:#168653;--goodbg:#e8f7ef;--bad:#c83e4d;--badbg:#fff0f1;
+  --shadow:0 12px 34px rgba(28,42,72,.07);--r:18px
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1100px;margin:auto;padding:26px 20px 100px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:21px}
+.logo{width:38px;height:38px;border-radius:13px;background:var(--brand);color:white;display:grid;place-items:center;font-size:20px}
+.sub,.muted{color:var(--muted);font-size:13px}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:650;background:var(--brand);color:white;transition:.15s}
+.btn:hover{filter:brightness(.96);transform:translateY(-1px)}
+.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.soft{background:var(--brand2);color:var(--brand)}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.btn:disabled{opacity:.48;cursor:not-allowed;transform:none}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:24px 0}
+.hero h1{font-size:clamp(27px,4vw,38px);margin:0 0 5px}
+.hero p{margin:0;color:var(--muted)}
+.actions,.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:15px}
+.module,.view,.stat-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:19px;box-shadow:var(--shadow)}
+.module{display:flex;flex-direction:column;min-height:195px}
+.module h3{margin:0 0 5px;font-size:18px}
+.module p{color:var(--muted);margin:0 0 17px;font-size:13px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tag{font-size:12px;color:#536071;background:#f1f3f7;padding:5px 9px;border-radius:30px}
+.module-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+.empty{padding:38px 18px;text-align:center;border:1px dashed #ccd4e1;border-radius:var(--r);color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:20px;margin-bottom:5px}
+.hidden{display:none!important}
+.back{margin-bottom:15px}
+.module-head{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:15px}
+.module-head h2{margin:0;font-size:25px}
+.progress{height:7px;background:#edf0f5;border-radius:20px;overflow:hidden;margin:13px 0 20px}
+.progress span{display:block;height:100%;background:var(--brand);width:0;transition:width .2s}
+.question{font-size:clamp(22px,4vw,30px);font-weight:750;margin:14px 0 12px}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.answer,.tile{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left;font-weight:600;color:var(--ink)}
+.answer:hover,.tile:hover{border-color:var(--brand)}
+.answer.correct,.tile.correct{border-color:var(--good);background:var(--goodbg);color:var(--good)}
+.answer.wrong,.tile.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+.answer:disabled,.tile:disabled{cursor:default}
+.field{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;outline:none;background:white;color:var(--ink)}
+.field:focus{border-color:var(--brand);box-shadow:0 0 0 3px #5267e81a}
+textarea.field{min-height:260px;resize:vertical;font-family:monospace;font-size:13px}
+.feedback{margin-top:14px;padding:12px 15px;border-radius:12px;font-size:14px}
+.feedback.good{background:var(--goodbg);color:var(--good)}
+.feedback.bad{background:var(--badbg);color:var(--bad)}
+.spacer{flex:1}
+.reading{font-size:17px;line-height:1.9;background:#fafbfe;padding:19px;border-radius:14px;border:1px solid var(--line);margin:15px 0 20px}
+.read-word{
+  display:inline;position:relative;border:0;background:transparent;color:inherit;
+  padding:0 1px;border-radius:3px;text-decoration:none;
+  border-bottom:none;cursor:pointer;font:inherit
+}
+.read-word:hover{background:transparent;color:inherit}
+.read-word.active{background:#fff2c7;color:#7b5700}
+.statement{border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.statement p{margin:0 0 11px;font-weight:600}
+.choices{display:flex;gap:8px}
+.choices button{flex:1}
+.statement.good{border-color:#8ed2ad;background:#f5fcf7}
+.statement.bad{border-color:#f0a4aa;background:#fff8f8}
+.small{font-size:12px;color:var(--muted)}
+.modal-back{position:fixed;inset:0;background:#11182780;display:grid;place-items:center;padding:18px;z-index:20}
+.modal{width:min(680px,100%);background:white;border-radius:20px;padding:22px;box-shadow:0 25px 80px #0003;max-height:90vh;overflow:auto}
+.modal h2{margin:0 0 5px}
+.modal p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:15px}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#182230;color:white;padding:11px 16px;border-radius:12px;z-index:40;box-shadow:var(--shadow)}
+.matching{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.matching-col{display:grid;gap:8px}
+.tile{width:100%;text-align:center}
+.selected{outline:2px solid var(--brand);background:var(--brand2)}
+.built{min-height:55px;border:1px dashed #bac4d4;border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:7px;margin:13px 0}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0}
+.exam-item{border:1px solid var(--line);border-radius:14px;padding:18px;margin:15px 0;background:#fff}
+.exam-item.exam-correct{border-color:var(--good)}
+.exam-item.exam-wrong{border-color:var(--bad)}
+.exam-option{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin:7px 0}
+.exam-result{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin:20px 0}
+.exam-correct{border-color:var(--good)!important;background:var(--goodbg)!important}
+.exam-wrong{border-color:var(--bad)!important;background:var(--badbg)!important}
+.symbol-dock{position:fixed;bottom:13px;left:50%;transform:translateX(-50%);width:min(610px,calc(100% - 24px));background:#fff;border:1px solid var(--line);box-shadow:0 8px 30px #1b2a4420;border-radius:16px;padding:8px 11px;z-index:8}
+.dock-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);padding:0 3px 5px}
+.symbols{display:flex;gap:7px;justify-content:center}
+.symbols button{border:1px solid var(--line);background:#f8f9fc;border-radius:9px;min-width:40px;padding:6px;font-weight:700}
+@media(max-width:650px){
+ .app{padding:17px 13px 110px}
+ .hero{align-items:start;flex-direction:column}
+ .actions{width:100%}.actions .btn{flex:1}
+ .answers{grid-template-columns:1fr}
+ .module-head{flex-direction:column}
+ .view{padding:15px}
+ .matching{gap:7px}
+ .tile{padding:10px 5px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <div class="logo">文</div>
+    <div>lingua<span style="color:var(--brand)">.</span><div class="sub">Твоя языковая практика</div></div>
+  </div>
+  <div class="sub" id="moduleCount">0 модулей</div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div><h1>Продолжим учиться?</h1><p>Выбери модуль или добавь собственный материал.</p></div>
+    <div class="actions">
+      <button class="btn secondary" id="demoBtn">Загрузить демо-модуль</button>
+      <button class="btn" id="openImport">＋ Загрузить новый модуль</button>
+    </div>
+  </section>
+  <section class="view" style="margin-bottom:16px">
+    <div class="row">
+      <strong>Контрольный тест / Экзамен</strong>
+      <select id="examModuleSelect" class="field" style="max-width:340px;margin:0">
+        <option value="">Выбери модуль…</option>
+      </select>
+      <button class="btn secondary" id="homeExam">📝 Запустить экзамен</button>
+    </div>
+  </section>
+  <section class="grid" id="moduleGrid"></section>
+</main>
+
+<main id="study" class="hidden">
+  <button class="btn secondary back" id="backHome">← Все модули</button>
+  <section class="view">
+    <div class="module-head">
+      <div><h2 id="studyTitle"></h2><div class="sub" id="studySubtitle"></div></div>
+      <div class="actions">
+        <button class="btn soft" id="statsBtn">Статистика</button>
+        <button class="btn danger" id="deleteModule">Удалить модуль</button>
+      </div>
+    </div>
+
+    <div id="sessionSetup">
+      <h3>Настройка тренировки</h3>
+      <p class="muted">Выбери точное количество заданий. Reading считается одним заданием и всегда идёт последним.</p>
+      <div class="row" style="margin:18px 0">
+        <label><input type="radio" name="sessionCount" value="10" checked> 10 заданий</label>
+        <label><input type="radio" name="sessionCount" value="20"> 20 заданий</label>
+        <label><input type="radio" name="sessionCount" value="30"> 30 заданий</label>
+      </div>
+      <div class="row">
+        <button class="btn" id="startSession">Начать тренировку →</button>
+        <button class="btn secondary" id="onlyReading">Только Reading</button>
+        <button class="btn soft" id="moduleExam">📝 Пройти экзамен по теме</button>
+      </div>
+    </div>
+
+    <div id="sessionArea" class="hidden">
+      <div class="row" style="justify-content:space-between">
+        <strong id="taskCounter"></strong><span class="small" id="taskType"></span>
+      </div>
+      <div class="progress"><span id="sessionProgress"></span></div>
+      <div id="taskContent"></div>
+    </div>
+    <div id="resultArea" class="hidden"></div>
+    <div id="examArea" class="hidden"></div>
+    <div id="statsContent" class="hidden"></div>
+  </section>
+</main>
+
+<div class="modal-back hidden" id="importModal">
+  <div class="modal">
+    <h2>Импорт учебного модуля</h2>
+    <p>Вставь JSON. Все материалы сохранятся в этом браузере.</p>
+    <textarea class="field" id="jsonInput" spellcheck="false" placeholder='{"title":"Suomi A1","language":"fi-FI","words":[...],"grammar":[...],"reading":{...}}'></textarea>
+    <div class="small" id="importError"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="cancelImport">Отмена</button>
+      <button class="btn" id="importBtn">Импортировать</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<div class="symbol-dock">
+  <div class="dock-head"><span>Специальные символы</span><button class="btn secondary" id="toggleDock">Свернуть</button></div>
+  <div class="symbols" id="symbols">
+    <button>ä</button><button>ö</button><button>å</button>
+    <button>Ä</button><button>Ö</button><button>Å</button>
+    <button>š</button><button>ž</button>
+  </div>
+</div>
+
+<script>
+const STORE='lingua_modules_v2';
+const $=s=>document.querySelector(s);
+let modules=loadModules(),current=null,queue=[],taskIndex=0,sessionAttemptStart=0;
+
+function loadModules(){
+  try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch{return []}
+}
+function save(){
+  localStorage.setItem(STORE,JSON.stringify(modules));
+  renderHome();
+}
+function esc(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function toast(t){
+  $('#toast').textContent=t;
+  $('#toast').classList.remove('hidden');
+  setTimeout(()=>$('#toast').classList.add('hidden'),2300);
+}
+function shuffle(a){
+  let x=[...a];
+  for(let i=x.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1));
+    [x[i],x[j]]=[x[j],x[i]];
+  }
+  return x;
+}
+function norm(s){
+  return String(s||'').trim().toLocaleLowerCase()
+    .replace(/[.!?]+$/,'').replace(/\s+/g,' ');
+}
+function normalize(m){
+  if(!m||!m.title||!Array.isArray(m.words)||!m.words.length)
+    throw Error('Нужны title и непустой массив words.');
+  m.id=m.id||'module-'+Date.now();
+  m.language=m.language||'fi-FI';
+  m.grammar=m.grammar||[];
+  m.reading=m.reading||{text:'',glossary:{},questions:[]};
+  m.reading.glossary=m.reading.glossary||{};
+  m.reading.questions=m.reading.questions||[];
+  delete m.speaking;
+  return m;
+}
+
+/* Удаляем русское пояснение в скобках из формулировок Reading.
+   Финский текст вопроса при этом остаётся без изменений. */
+function readingPrompt(value){
+  return String(value||'')
+    .replace(/\s*\([^()]*[\u0400-\u04FF][^()]*\)/gu,'')
+    .trim();
+}
+
+/* Генерирует Reading-текст с кликабельными словами.
+   Кликабельны все слова, даже если перевод для слова не задан в glossary. */
+function readingMarkup(text,glossary){
+  return String(text||'').split(/(\s+)/).map(token=>{
+    if(!token.trim())return token;
+    const clean=token.replace(/^[^\p{L}]+|[^\p{L}]+$/gu,'');
+    if(!clean)return esc(token);
+    const key=Object.keys(glossary||{}).find(
+      k=>k.toLocaleLowerCase()===clean.toLocaleLowerCase()
+    );
+    return `<button type="button" class="read-word"
+      data-readword="${esc(clean)}"
+      data-gloss="${esc(key||'')}">${esc(token)}</button>`;
+  }).join('');
+}
+
+/* Обработчик словаря для Reading — используется и в тренировке, и в экзамене. */
+function attachReadingGlossary(box,glossary){
+  box.querySelectorAll('[data-readword]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      box.querySelectorAll('.read-word.active').forEach(x=>x.classList.remove('active'));
+      button.classList.add('active');
+      const key=button.dataset.gloss;
+      const word=button.dataset.readword;
+      const tip=box.querySelector('.gloss-tip');
+      const translation=key?(glossary[key]||'Перевод не добавлен'):'Перевод не добавлен в словарь модуля';
+      tip.textContent=word+' — '+translation;
+      tip.classList.remove('hidden');
+    });
+  });
+}
+
+function renderHome(){
+  const grid=$('#moduleGrid');
+  $('#moduleCount').textContent=modules.length+' модулей';
+  grid.innerHTML=modules.length?modules.map(m=>`
+    <article class="module">
+      <h3>${esc(m.title)}</h3>
+      <p>${esc(m.description||'Учебный модуль')}</p>
+      <div class="meta">
+        <span class="tag">${esc(m.language||'')}</span>
+        <span class="tag">${m.words.length} слов</span>
+        <span class="tag">${(m.grammar||[]).length} заданий грамматики</span>
+      </div>
+      <div class="module-foot">
+        <span class="small">${m.reading?.questions?.length||0} вопросов Reading</span>
+        <div class="actions">
+          <button class="btn secondary" data-exam="${esc(m.id)}">📝 Экзамен</button>
+          <button class="btn" data-open="${esc(m.id)}">Тренировка →</button>
+        </div>
+      </div>
+    </article>`).join(''):`<div class="empty"><strong>Пока нет учебных модулей</strong>Загрузи демо-модуль или импортируй JSON.</div>`;
+
+  $('#examModuleSelect').innerHTML=
+    '<option value="">Выбери модуль…</option>'+
+    modules.map(m=>`<option value="${esc(m.id)}">${esc(m.title)}</option>`).join('');
+}
+
+function showStudy(){
+  $('#home').classList.add('hidden');
+  $('#study').classList.remove('hidden');
+  $('#sessionSetup').classList.remove('hidden');
+  ['sessionArea','resultArea','examArea','statsContent'].forEach(
+    id=>$('#'+id).classList.add('hidden')
+  );
+  $('#studyTitle').textContent=current.title;
+  $('#studySubtitle').textContent=(current.language||'')+(current.level?' · '+current.level:'');
+}
+function openModule(id){
+  current=modules.find(m=>m.id===id);
+  if(current)showStudy();
+}
+function record(cat,id,ok,label,explanation){
+  current.analytics=current.analytics||{attempts:[]};
+  current.analytics.attempts.push({cat,id,ok,label,explanation,time:Date.now()});
+  localStorage.setItem(STORE,JSON.stringify(modules));
+}
+
+function makePool(){
+  let pool=[];
+  const words=shuffle(current.words);
+  words.forEach((word,i)=>{
+    pool.push({kind:'write-fi',word});
+    pool.push({kind:'write-ru',word});
+    if(i%2===0)pool.push({kind:'choice',word});
+    if(i%3===0)pool.push({kind:'listening',word});
+  });
+  (current.grammar||[]).forEach((q,index)=>pool.push({kind:'grammar',q,index}));
+  for(let i=0;i<words.length;i+=4){
+    const group=words.slice(i,i+4);
+    if(group.length>=3)pool.push({kind:'matching',words:group});
+  }
+  if(current.reading?.text)pool.push({kind:'reading'});
+  return pool;
+}
+
+function startSession(readingOnly=false){
+  const limit=readingOnly?1:Number(
+    document.querySelector('input[name="sessionCount"]:checked')?.value||10
+  );
+  let pool=makePool();
+  const reading=pool.find(x=>x.kind==='reading');
+  pool=shuffle(pool.filter(x=>x.kind!=='reading'));
+  let selected=readingOnly?[]:pool.slice(0,Math.max(0,limit-(reading?1:0)));
+
+  while(!readingOnly&&selected.length<limit-(reading?1:0)){
+    const candidates=makePool().filter(x=>x.kind!=='reading');
+    if(!candidates.length)break;
+    selected.push(candidates[selected.length%candidates.length]);
+  }
+
+  if(reading&&limit>0)selected.push(reading);
+  if(readingOnly&&!reading){
+    toast('В этом модуле нет текста Reading');
+    return;
+  }
+
+  queue=selected.slice(0,limit);
+  taskIndex=0;
+  sessionAttemptStart=current.analytics?.attempts?.length||0;
+  $('#sessionSetup').classList.add('hidden');
+  $('#resultArea').classList.add('hidden');
+  $('#sessionArea').classList.remove('hidden');
+  renderTask();
+}
+function nextTask(){
+  taskIndex++;
+  renderTask();
+}
+
+function renderTask(){
+  if(taskIndex>=queue.length){
+    finishSession();
+    return;
+  }
+  const task=queue[taskIndex];
+  $('#taskCounter').textContent=`Задание ${taskIndex+1} из ${queue.length}`;
+  $('#taskType').textContent={
+    choice:'Выбери перевод',
+    'write-fi':'Напиши по-фински',
+    'write-ru':'Напиши перевод на русский',
+    listening:'Аудирование',
+    matching:'Найди пару',
+    grammar:'Грамматика',
+    reading:'Reading · финальный блок'
+  }[task.kind];
+  $('#sessionProgress').style.width=(taskIndex/queue.length*100)+'%';
+
+  const box=$('#taskContent');
+  if(task.kind==='reading')return renderReading(box,false);
+  if(task.kind==='matching')return renderMatching(box,task,false);
+  if(task.kind==='grammar')return renderGrammar(box,task,false);
+
+  const word=task.word;
+
+  /* ИСПРАВЛЕНИЕ №1:
+     В «Выборе из 4» показываем финское слово, варианты остаются русскими. */
+  const prompt=task.kind==='write-ru'
+    ?word.front
+    :task.kind==='listening'
+      ?'Нажми «Прослушать» и напиши услышанное слово'
+      :task.kind==='choice'
+        ?word.front
+        :word.back;
+
+  let html=`<div class="question">${esc(prompt)}</div>`;
+
+  if(task.kind==='listening'){
+    html+=`<button class="btn secondary" id="playWord">🔊 Прослушать</button>`;
+  }
+
+  if(task.kind==='choice'){
+    const options=shuffle([
+      word.back,
+      ...shuffle(current.words.filter(x=>x.front!==word.front).map(x=>x.back)).slice(0,3)
+    ]);
+    html+=`<div class="answers">${options.map(option=>
+      `<button class="answer" data-opt="${esc(option)}">${esc(option)}</button>`
+    ).join('')}</div>`;
+  }else{
+    html+=`<input class="field" id="typedAnswer" autocomplete="off"
+      placeholder="${task.kind==='write-ru'?'Введи перевод на русский':'Введи ответ'}">`;
+  }
+
+  html+=`<div class="row" style="margin-top:16px">
+    <span class="spacer"></span><button class="btn" id="checkOne">Проверить</button>
+  </div><div id="feedback"></div>`;
+
+  box.innerHTML=html;
+  let chosen='';
+
+  box.querySelectorAll('[data-opt]').forEach(button=>{
+    button.onclick=()=>{
+      chosen=button.dataset.opt;
+      box.querySelectorAll('[data-opt]').forEach(x=>
+        x.classList.toggle('selected',x===button)
+      );
+    };
+  });
+
+  $('#playWord')?.addEventListener('click',()=>{
+    if(!('speechSynthesis'in window)){
+      toast('Озвучка не поддерживается');
+      return;
+    }
+    const utterance=new SpeechSynthesisUtterance(word.front);
+    utterance.lang=current.language||'fi-FI';
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+  });
+
+  $('#checkOne').onclick=()=>{
+    const expected=task.kind==='write-ru'?word.back:
+      task.kind==='choice'?word.back:word.front;
+    const value=task.kind==='choice'?chosen:$('#typedAnswer').value;
+    const ok=norm(value)===norm(expected);
+
+    record('vocab',word.front+':'+task.kind,ok,
+      word.front+' → '+word.back,
+      ok?'':`Правильный ответ: ${expected}. ${word.hint||''}`
+    );
+
+    $('#feedback').innerHTML=`
+      <div class="feedback ${ok?'good':'bad'}">
+        ${ok?'Верно!':'Правильный ответ: '+esc(expected)}
+        ${esc(word.hint||'')}
+      </div>
+      <button class="btn" id="continue">Продолжить →</button>`;
+
+    $('#checkOne').disabled=true;
+    if($('#typedAnswer'))$('#typedAnswer').disabled=true;
+    box.querySelectorAll('[data-opt]').forEach(x=>x.disabled=true);
+    $('#continue').onclick=nextTask;
+  };
+
+  $('#typedAnswer')?.addEventListener('keydown',e=>{
+    if(e.key==='Enter')$('#checkOne').click();
+  });
+}
+
+function renderMatching(box,task){
+  const left=shuffle(task.words);
+  const right=shuffle(task.words);
+  box.innerHTML=`
+    <p class="muted">Сопоставь слова и переводы.</p>
+    <div class="matching">
+      <div class="matching-col">${left.map(w=>
+        `<button class="tile" data-l="${esc(w.front)}">${esc(w.front)}</button>`
+      ).join('')}</div>
+      <div class="matching-col">${right.map(w=>
+        `<button class="tile" data-r="${esc(w.front)}">${esc(w.back)}</button>`
+      ).join('')}</div>
+    </div><div id="matchDone"></div>`;
+
+  let picked=null;
+  const done=new Set();
+
+  box.querySelectorAll('[data-l]').forEach(button=>{
+    button.onclick=()=>{
+      picked=button.dataset.l;
+      box.querySelectorAll('[data-l]').forEach(x=>
+        x.classList.toggle('selected',x===button)
+      );
+    };
+  });
+
+  box.querySelectorAll('[data-r]').forEach(button=>{
+    button.onclick=()=>{
+      if(!picked)return toast('Сначала выбери слово слева');
+      const ok=picked===button.dataset.r;
+      if(ok){
+        done.add(picked);
+        button.classList.add('correct');
+        box.querySelector(`[data-l="${CSS.escape(picked)}"]`)?.classList.add('correct');
+        button.disabled=true;
+        box.querySelector(`[data-l="${CSS.escape(picked)}"]`).disabled=true;
+      }else{
+        button.classList.add('wrong');
+        setTimeout(()=>button.classList.remove('wrong'),500);
+      }
+      picked=null;
+      if(done.size===task.words.length){
+        $('#matchDone').innerHTML=`
+          <div class="feedback good">Все пары найдены!</div>
+          <button class="btn" id="continue">Продолжить →</button>`;
+        record('vocab','matching:'+taskIndex,true,'Matching','');
+        $('#continue').onclick=nextTask;
+      }
+    };
+  });
+}
+
+function renderGrammar(box,task){
+  const q=task.q;
+  const kind=q.type||'choice';
+  let html=`<div class="question">${esc(kind==='order'?q.prompt:q.question)}</div>`;
+
+  if(kind==='choice'){
+    html+=`<div class="answers">${(q.options||[]).map(option=>
+      `<button class="answer" data-g="${esc(option)}">${esc(option)}</button>`
+    ).join('')}</div>`;
+  }else if(kind==='order'){
+    html+=`<div class="built" id="built"></div>
+      <div class="wordbank">${shuffle(q.words||[]).map(word=>
+        `<button class="tile" data-w="${esc(word)}">${esc(word)}</button>`
+      ).join('')}</div>`;
+  }else{
+    html+=`<input class="field" placeholder="Введи правильную форму" data-answer>`;
+  }
+
+  html+=`<div class="row" style="margin-top:16px">
+    <span class="spacer"></span><button class="btn" id="checkGrammar">Проверить</button>
+  </div><div id="gFeedback"></div>`;
+
+  box.innerHTML=html;
+  let chosen='';
+  const built=[];
+
+  box.querySelectorAll('[data-g]').forEach(button=>{
+    button.onclick=()=>{
+      chosen=button.dataset.g;
+      box.querySelectorAll('[data-g]').forEach(x=>
+        x.classList.toggle('selected',x===button)
+      );
+    };
+  });
+
+  box.querySelectorAll('[data-w]').forEach(button=>{
+    button.onclick=()=>{
+      built.push(button.dataset.w);
+      button.disabled=true;
+      $('#built').textContent=built.join(' ');
+    };
+  });
+
+  $('#checkGrammar').onclick=()=>{
+    const value=kind==='choice'?chosen:
+      kind==='order'?built.join(' '):
+      box.querySelector('[data-answer]').value;
+    const ok=norm(value)===norm(q.answer);
+
+    record('grammar','grammar:'+task.index,ok,q.question||q.prompt,
+      ok?'':q.explanation||''
+    );
+
+    $('#gFeedback').innerHTML=`
+      <div class="feedback ${ok?'good':'bad'}">
+        ${ok?'Верно!':'Ответ: '+esc(q.answer)}
+        ${esc(q.explanation||'')}
+      </div>
+      <button class="btn" id="continue">Продолжить →</button>`;
+
+    $('#continue').onclick=nextTask;
+    $('#checkGrammar').disabled=true;
+  };
+}
+
+function renderReading(box,exam){
+  const reading=current.reading||{};
+  if(!reading.text){
+    box.innerHTML='<p class="muted">Reading не заполнен.</p>';
+    return;
+  }
+
+  const questions=reading.questions||[];
+  const html=`
+    <div class="row"><strong>Reading</strong></div>
+    <div class="reading">${readingMarkup(reading.text,reading.glossary)}</div>
+    <div class="feedback hidden gloss-tip"></div>
+    <div id="readingQs">
+      ${questions.map((q,i)=>`
+        <div class="statement" data-question="${i}">
+          <p>${esc(readingPrompt(q.type==='tf'?q.statement:q.question))}</p>
+          ${q.type==='tf'?`
+            <div class="choices">
+              <button class="btn secondary" data-r="${i}" data-v="true">True</button>
+              <button class="btn secondary" data-r="${i}" data-v="false">False</button>
+            </div>`:`
+            <div class="answers">
+              ${(q.options||[]).map(option=>
+                `<button class="answer" data-r="${i}" data-v="${esc(option)}">${esc(option)}</button>`
+              ).join('')}
+            </div>`}
+          <div class="feedback-slot"></div>
+        </div>
+      `).join('')}
+    </div>
+    ${exam?'':`
+      <div class="row"><span class="spacer"></span>
+        <button class="btn" id="checkReading">Проверить Reading</button>
+      </div>
+      <div id="readingResult"></div>`}
+  `;
+
+  box.innerHTML=html;
+
+  /* Словарь работает в Reading и в обычной тренировке, и в экзамене. */
+  attachReadingGlossary(box,reading.glossary||{});
+
+  const answers={};
+
+  box.querySelectorAll('[data-r]').forEach(button=>{
+    button.onclick=()=>{
+      if(exam&&exam.submitted)return;
+      const index=button.dataset.r;
+      answers[index]=reading.questions[index].type==='tf'
+        ?button.dataset.v==='true':button.dataset.v;
+
+      box.querySelectorAll(`[data-r="${index}"]`).forEach(x=>
+        x.classList.toggle('selected',x===button)
+      );
+    };
+  });
+
+  if(!exam){
+    $('#checkReading').onclick=()=>{
+      let correct=0;
+
+      questions.forEach((q,i)=>{
+        const ok=answers[i]===q.answer;
+        if(ok)correct++;
+
+        const slot=box.querySelector(`[data-question="${i}"] .feedback-slot`);
+        slot.innerHTML=`
+          <div class="feedback ${ok?'good':'bad'}">
+            ${ok?'Верно!':'Правильный ответ: '+esc(q.answer)}
+            ${esc(q.explanation||'')}
+          </div>`;
+
+        box.querySelectorAll(`[data-r="${i}"]`).forEach(button=>{
+          button.disabled=true;
+          const answerValue=q.type==='tf'
+            ?String(q.answer):String(q.answer);
+          if(button.dataset.v===answerValue)button.classList.add('correct');
+          else if(button.classList.contains('selected'))button.classList.add('wrong');
+        });
+
+        record('reading','reading:'+i,ok,
+          readingPrompt(q.statement||q.question),
+          ok?'':q.explanation||''
+        );
+      });
+
+      $('#readingResult').innerHTML=`
+        <div class="feedback good">Результат Reading: ${correct} / ${questions.length}</div>
+        <button class="btn" id="finishReading">Завершить тренировку →</button>`;
+      $('#checkReading').disabled=true;
+      $('#finishReading').onclick=nextTask;
+    };
+  }
+}
+
+function finishSession(){
+  $('#sessionArea').classList.add('hidden');
+  const attempts=(current.analytics?.attempts||[]).slice(sessionAttemptStart);
+  const correct=attempts.filter(x=>x.ok).length;
+  const percent=attempts.length?Math.round(correct/attempts.length*100):0;
+
+  $('#resultArea').classList.remove('hidden');
+  $('#resultArea').innerHTML=`
+    <div class="empty">
+      <strong>Тренировка завершена!</strong>
+      ${correct} правильных ответов из ${attempts.length} проверенных (${percent}%).
+    </div>
+    <div class="row">
+      <button class="btn" id="again">Повторить</button>
+      <button class="btn secondary" id="setupAgain">К настройкам</button>
+    </div>`;
+
+  $('#again').onclick=()=>startSession();
+  $('#setupAgain').onclick=()=>{
+    $('#resultArea').classList.add('hidden');
+    $('#sessionSetup').classList.remove('hidden');
+  };
+}
+
+function examTasks(){
+  const tasks=[];
+  shuffle(current.words).forEach(word=>tasks.push({kind:'write-fi',word}));
+  (current.grammar||[]).forEach((q,index)=>tasks.push({kind:'grammar',q,index}));
+  if(current.reading?.text)tasks.push({kind:'reading'});
+  return tasks;
+}
+
+function startExam(){
+  queue=examTasks();
+  $('#sessionSetup').classList.add('hidden');
+  $('#sessionArea').classList.add('hidden');
+  $('#resultArea').classList.add('hidden');
+  $('#statsContent').classList.add('hidden');
+  $('#examArea').classList.remove('hidden');
+
+  const html=`
+    <div class="exam-top">
+      <h2>📝 Контрольный тест: ${esc(current.title)}</h2>
+      <p class="muted">Заполни все задания. До отправки ответы и правильность не показываются.</p>
+    </div>
+    <form id="examForm">
+      ${queue.map((task,index)=>{
+        if(task.kind==='reading'){
+          const reading=current.reading;
+          return `
+            <section class="exam-item" data-exam-reading>
+              <h3>${index+1}. Reading · текст и вопросы</h3>
+              <div class="reading">${readingMarkup(reading.text,reading.glossary||{})}</div>
+              <div class="feedback hidden gloss-tip"></div>
+              ${(reading.questions||[]).map((q,j)=>`
+                <div class="statement" data-exam-reading-question="${j}">
+                  <p>${esc(readingPrompt(q.type==='tf'?q.statement:q.question))}</p>
+                  ${q.type==='tf'?`
+                    <label class="exam-option"><input type="radio" name="exam-r-${j}" value="true"> True</label>
+                    <label class="exam-option"><input type="radio" name="exam-r-${j}" value="false"> False</label>`:
+                    (q.options||[]).map(option=>`
+                      <label class="exam-option">
+                        <input type="radio" name="exam-r-${j}" value="${esc(option)}"> ${esc(option)}
+                      </label>`).join('')}
+                  <div class="feedback-slot"></div>
+                </div>
+              `).join('')}
+            </section>`;
+        }
+
+        if(task.kind==='grammar'){
+          const q=task.q;
+          const kind=q.type||'choice';
+          return `
+            <section class="exam-item" data-exam="${index}">
+              <h3>${index+1}. Грамматика</h3>
+              <p class="question">${esc(kind==='order'?q.prompt:q.question)}</p>
+              ${kind==='choice'?
+                (q.options||[]).map(option=>`
+                  <label class="exam-option">
+                    <input type="radio" name="exam-${index}" value="${esc(option)}"> ${esc(option)}
+                  </label>`).join(''):
+                kind==='order'?
+                  `<input class="field" name="exam-${index}" placeholder="Составь предложение из слов: ${(q.words||[]).join(' · ')}">`:
+                  `<input class="field" name="exam-${index}" placeholder="Введи правильную форму">`}
+              <div class="feedback-slot"></div>
+            </section>`;
+        }
+
+        const word=task.word;
+        return `
+          <section class="exam-item" data-exam="${index}">
+            <h3>${index+1}. Перевод на изучаемый язык</h3>
+            <p class="question">${esc(word.back)}</p>
+            <input class="field" name="exam-${index}" placeholder="Введи перевод на ${esc(current.language)}">
+            <div class="feedback-slot"></div>
+          </section>`;
+      }).join('')}
+      <button class="btn" type="submit" style="width:100%;padding:16px;font-size:17px">
+        Завершить и проверить тест
+      </button>
+    </form>
+    <div id="examVerdict"></div>`;
+
+  $('#examArea').innerHTML=html;
+  attachReadingGlossary($('#examArea'),current.reading?.glossary||{});
+  $('#examForm').onsubmit=e=>{
+    e.preventDefault();
+    gradeExam();
+  };
+}
+
+function gradeExam(){
+  const form=$('#examForm');
+  let correct=0,total=0;
+  const weak=[];
+
+  queue.forEach((task,index)=>{
+    if(task.kind==='reading'){
+      const questions=current.reading.questions||[];
+
+      questions.forEach((q,j)=>{
+        total++;
+        const value=form.querySelector(`[name="exam-r-${j}"]:checked`)?.value;
+        const answer=q.type==='tf'?String(q.answer):String(q.answer);
+        const ok=value===answer;
+        if(ok)correct++;
+        else weak.push(readingPrompt(q.statement||q.question));
+
+        const item=form.querySelector(`[data-exam-reading-question="${j}"]`);
+        if(item){
+          item.querySelector('.feedback-slot').innerHTML=`
+            <div class="feedback ${ok?'good':'bad'}">
+              ${ok?'Верно!':'Правильный ответ: '+esc(answer)}
+              ${esc(q.explanation||'')}
+            </div>`;
+          item.querySelectorAll('input').forEach(input=>{
+            const label=input.closest('label');
+            if(input.value===answer)label?.classList.add('exam-correct');
+            else if(input.checked)label?.classList.add('exam-wrong');
+          });
+        }
+      });
+      return;
+    }
+
+    total++;
+    const element=form.querySelector(`[name="exam-${index}"]`);
+    const value=element?.type==='radio'
+      ?form.querySelector(`[name="exam-${index}"]:checked`)?.value
+      :element?.value;
+
+    const answer=task.kind==='grammar'?task.q.answer:task.word.front;
+    const ok=norm(value)===norm(answer);
+    if(ok)correct++;
+    else weak.push(task.kind==='grammar'
+      ?(task.q.question||task.q.prompt)+' — '+(task.q.explanation||'')
+      :task.word.front+' — '+task.word.back
+    );
+
+    const item=form.querySelector(`[data-exam="${index}"]`);
+    if(item){
+      item.classList.add(ok?'exam-correct':'exam-wrong');
+      item.querySelector('.feedback-slot').innerHTML=`
+        <div class="feedback ${ok?'good':'bad'}">
+          ${ok?'Верно!':'Правильный ответ: '+esc(answer)}
+          ${esc(task.kind==='grammar'?(task.q.explanation||''):'')}
+        </div>`;
+    }
+  });
+
+  const percent=total?Math.round(correct/total*100):0;
+  let verdict=percent>=90
+    ?'Отлично! Тема усвоена на высоком уровне.'
+    :percent>=75
+      ?'Хороший результат! Повтори конкретные слова и правила, в которых были ошибки.'
+      :'Не расстраивайся, тема непростая — лучше пройти тренировку по этому модулю ещё раз.';
+
+  $('#examVerdict').innerHTML=`
+    <div class="exam-result">
+      <h2>${percent}% · ${correct} из ${total}</h2>
+      <p>${verdict}</p>
+      ${percent>=75&&percent<90?`
+        <h3>Что повторить</h3>
+        <ul>${weak.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`:''}
+      ${percent<75?`
+        <button class="btn" id="returnTraining">Вернуться к обычной тренировке</button>`:''}
+    </div>`;
+
+  $('#returnTraining')?.addEventListener('click',()=>{
+    $('#examArea').classList.add('hidden');
+    $('#sessionSetup').classList.remove('hidden');
+  });
+
+  form.querySelectorAll('input,button').forEach(element=>element.disabled=true);
+  form.querySelector('button[type="submit"]')?.remove();
+}
+
+function renderStats(){
+  const attempts=current.analytics?.attempts||[];
+  const total=attempts.length;
+  const correct=attempts.filter(x=>x.ok).length;
+  const percent=total?Math.round(correct/total*100):0;
+
+  $('#statsContent').innerHTML=`
+    <h2>Статистика</h2>
+    <div class="empty"><strong>${percent}%</strong>${correct} правильных из ${total}</div>
+    <h3>Ошибки для повторения</h3>
+    <ul>
+      ${attempts.filter(x=>!x.ok).slice(-15).map(x=>
+        `<li>${esc(x.label)} — ${esc(x.explanation)}</li>`
+      ).join('')||'<li>Ошибок пока нет.</li>'}
+    </ul>
+    <button class="btn secondary" id="closeStats">Закрыть</button>`;
+
+  $('#closeStats').onclick=()=>{
+    $('#statsContent').classList.add('hidden');
+    $('#sessionSetup').classList.remove('hidden');
+  };
+}
+
+/* Навигация и импорт */
+$('#moduleGrid').addEventListener('click',e=>{
+  const button=e.target.closest('[data-open],[data-exam]');
+  if(!button)return;
+  openModule(button.dataset.open||button.dataset.exam);
+  if(button.dataset.exam)startExam();
+});
+
+$('#homeExam').onclick=()=>{
+  const id=$('#examModuleSelect').value;
+  if(!id)return toast('Сначала выбери модуль');
+  openModule(id);
+  startExam();
+};
+
+$('#openImport').onclick=()=>{
+  $('#jsonInput').value='';
+  $('#importError').textContent='';
+  $('#importModal').classList.remove('hidden');
+};
+$('#cancelImport').onclick=()=>$('#importModal').classList.add('hidden');
+$('#importModal').onclick=e=>{
+  if(e.target.id==='importModal')$('#importModal').classList.add('hidden');
+};
+
+$('#importBtn').onclick=()=>{
+  try{
+    const module=normalize(JSON.parse($('#jsonInput').value));
+    if(modules.some(x=>x.id===module.id))module.id+='-'+Date.now();
+    modules.unshift(module);
+    save();
+    $('#importModal').classList.add('hidden');
+    toast('Модуль импортирован');
+  }catch(error){
+    $('#importError').textContent=error.message;
+  }
+};
+
+$('#demoBtn').onclick=()=>{
+  const module=normalize({
+    id:'demo-fi-a1',
+    title:'Финский A1 — демо',
+    language:'fi-FI',
+    level:'A1',
+    description:'Пример модуля с разными типами упражнений.',
+    words:[
+      {front:'lukea',back:'читать'},
+      {front:'kirja',back:'книга'},
+      {front:'talo',back:'дом'},
+      {front:'ystävä',back:'друг'},
+      {front:'laittaa ruokaa',back:'готовить еду'},
+      {front:'piirtää',back:'рисовать'},
+      {front:'soittaa kitaraa',back:'играть на гитаре'},
+      {front:'lentää',back:'летать'},
+      {front:'kertoa',back:'рассказывать'},
+      {front:'odottaa',back:'ждать'}
+    ],
+    grammar:[
+      {
+        type:'choice',question:'Minä ___ kirjaa.',
+        options:['luen','luet','lukee'],answer:'luen',
+        explanation:'Minä + форма первого лица.'
+      },
+      {
+        type:'form',question:'Minä asun ___ (Helsinki).',
+        answer:'Helsingissä',
+        explanation:'Окончание -ssä обозначает нахождение в месте.'
+      },
+      {
+        type:'order',prompt:'Я читаю книгу.',
+        words:['kirjaa','Minä','luen'],
+        answer:'Minä luen kirjaa',
+        explanation:'Подлежащее + сказуемое + дополнение.'
+      }
+    ],
+    reading:{
+      text:'Hei! Minä olen Anna. Asun Helsingissä. Minä luen kirjaa ja juon kahvia. Ystäväni asuu lähellä.',
+      glossary:{
+        hei:'привет',minä:'я',olen:'есть',asun:'живу',
+        Helsingissä:'в Хельсинки',luen:'читаю',kirjaa:'книгу',
+        juon:'пью',kahvia:'кофе',ystäväni:'мой друг',
+        asuu:'живёт',lähellä:'рядом'
+      },
+      questions:[
+        {
+          type:'tf',statement:'Anna asuu Helsingissä.',
+          answer:true,
+          explanation:'Текст сообщает, что Анна живёт в Хельсинки.'
+        },
+        {
+          type:'mcq',question:'Mitä Anna lukee?',
+          options:['Kirjaa','Lehteä','Sanomalehteä'],
+          answer:'Kirjaa',
+          explanation:'Она читает книгу.'
+        }
+      ]
+    }
+  });
+
+  if(!modules.some(x=>x.id===module.id))modules.unshift(module);
+  save();
+  toast('Демо-модуль добавлен');
+};
+
+$('#backHome').onclick=()=>{
+  $('#study').classList.add('hidden');
+  $('#home').classList.remove('hidden');
+};
+$('#startSession').onclick=()=>startSession();
+$('#onlyReading').onclick=()=>startSession(true);
+$('#moduleExam').onclick=startExam;
+$('#statsBtn').onclick=()=>{
+  $('#sessionSetup').classList.add('hidden');
+  $('#statsContent').classList.remove('hidden');
+  renderStats();
+};
+$('#deleteModule').onclick=()=>{
+  if(confirm('Удалить модуль?')){
+    modules=modules.filter(x=>x.id!==current.id);
+    save();
+    $('#backHome').click();
+  }
+};
+
+$('#toggleDock').onclick=()=>{
+  const hidden=$('#symbols').classList.toggle('hidden');
+  $('#toggleDock').textContent=hidden?'Развернуть':'Свернуть';
+};
+let activeInput=null;
+document.addEventListener('focusin',e=>{
+  if(e.target.matches('input,textarea'))activeInput=e.target;
+});
+$('#symbols').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON'||!activeInput)return;
+  const element=activeInput;
+  const start=element.selectionStart??element.value.length;
+  const end=element.selectionEnd??element.value.length;
+  element.setRangeText(e.target.textContent,start,end,'end');
+  element.focus();
+});
+
+renderHome();
+</script>
+</body>
+</html>
